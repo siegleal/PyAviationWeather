@@ -11,9 +11,13 @@ formatCsv = 'format=csv'
 DefaultHoursBeforeNow = 'hoursBeforeNow=1.25'
 
 def buildStationString(stations):
+    ''' Creates the url param for stationstrings
+        by comma-separating the stations in the list '''
     return 'stationString=' + ','.join(stations)
 
 def buildUrl(ds, stations):
+    ''' Takes a datasource (metars or taf)
+        and a list of stations and builds the aviationweather.gov url '''
     datasource = metarDataSource
     if (ds == 'taf'):
         datasource = tafsDataSource
@@ -21,6 +25,7 @@ def buildUrl(ds, stations):
 
 #returns a list of lines to print
 def prettyPrintTaf(tafString):
+    ''' Parses a multi-line TAF string to print in a human-readable format'''
     splittaf = tafString.split()
     index = 0
     newlist = []
@@ -35,9 +40,12 @@ def prettyPrintTaf(tafString):
     return result
 
 def getXml(ds, stations):
+    ''' Builds the URL based on the data source and station list and makes a request and returns 
+        the raw XML http response '''
     return urllib2.urlopen(buildUrl(ds, stations)).read()
 
 def getRawTexts(datasource, stationList):
+    ''' Gets just the raw metar or taf for the given datasource (metar or taf) and stations in the station list '''
     result = []
     xml = getXml(datasource, stationList)
     root = ET.fromstring(xml)
